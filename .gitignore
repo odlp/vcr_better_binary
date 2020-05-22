@@ -11,3 +11,5 @@
 
 # rspec state
 spec/examples.txt
+
+coverage
