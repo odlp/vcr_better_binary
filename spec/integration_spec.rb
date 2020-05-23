@@ -30,10 +30,14 @@ RSpec.describe "use with VCR" do
     VCR.configure do |config|
       config.cassette_library_dir = tmp_dir
       config.hook_into :webmock
-      config.cassette_serializers[:better_binary] = serializer
       config.default_cassette_options = {
         serialize_with: :better_binary,
       }
+
+      silence_warnings do
+        # VCR warns about re-registering, but we want a fresh instance per test
+        config.cassette_serializers[:better_binary] = serializer
+      end
     end
   end
 
@@ -97,5 +101,14 @@ RSpec.describe "use with VCR" do
     binary_data_path = File.join(tmp_dir, "/bin_data", body.dig("bin_key"))
 
     expect(read_binary_data(binary_data_path)).to eq(expected_data)
+  end
+
+  def silence_warnings
+    original = $stderr
+    $stderr = File.new("/dev/null", "w")
+    yield
+  ensure
+    $stderr.close
+    $stderr = original
   end
 end
