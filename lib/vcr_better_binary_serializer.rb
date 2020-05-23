@@ -36,7 +36,7 @@ class VcrBetterBinarySerializer
   def prune_bin_data
     Pruner.new.prune_bin_data(
       bin_data_dir: bin_data_dir,
-      cassette_http_body_yielder: method(:yield_cassette_http_bodies)
+      cassette_http_bodies: all_cassette_http_bodies
     )
   end
 
@@ -98,12 +98,12 @@ class VcrBetterBinarySerializer
     File.open(path, "wb") { |file| file.write(data) }
   end
 
-  def yield_cassette_http_bodies
-    cassette_paths.each do |cassette_path|
+  def all_cassette_http_bodies
+    Enumerator::Lazy.new(cassette_paths) do |yielder, cassette_path|
       data = base_serializer.deserialize(File.read(cassette_path))
 
       yield_http_bodies(data) do |body|
-        yield(body)
+        yielder << body
       end
     end
   end

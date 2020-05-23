@@ -1,11 +1,11 @@
 class VcrBetterBinarySerializer
   class Pruner
-    def prune_bin_data(bin_data_dir:, cassette_http_body_yielder:)
+    def prune_bin_data(bin_data_dir:, cassette_http_bodies:)
       in_use_keys = Set.new
 
-      cassette_http_body_yielder.call do |body|
-        if body.key?(BIN_KEY)
-          in_use_keys << body[BIN_KEY]
+      cassette_http_bodies.each do |http_body|
+        if http_body.key?(BIN_KEY)
+          in_use_keys << http_body[BIN_KEY]
         end
       end
 
