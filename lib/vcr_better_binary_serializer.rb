@@ -1,9 +1,12 @@
 require "digest/bubblebabble"
 require "fileutils"
 require "vcr_better_binary_serializer/version"
+require "vcr_better_binary_serializer/pruner"
 require "vcr/cassette/serializers"
 
 class VcrBetterBinarySerializer
+  BIN_KEY = "bin_key"
+
   def initialize(base_serializer: VCR::Cassette::Serializers::YAML)
     @base_serializer = base_serializer
   end
@@ -31,27 +34,13 @@ class VcrBetterBinarySerializer
   end
 
   def prune_bin_data
-    in_use_keys = Set.new
-
-    yield_cassettes do |cassette|
-      yield_http_bodies(cassette) do |body|
-        if body.key?(BIN_KEY)
-          in_use_keys << body[BIN_KEY]
-        end
-      end
-    end
-
-    Dir.glob(File.expand_path("*", bin_data_dir)).each do |bin_file|
-      unless in_use_keys.include?(File.basename(bin_file))
-        File.delete(bin_file)
-      end
-    end
+    Pruner.new.prune_bin_data(
+      bin_data_dir: bin_data_dir,
+      cassette_http_body_yielder: method(:yield_cassette_http_bodies)
+    )
   end
 
   private
-
-  BIN_KEY = "bin_key"
-  private_constant :BIN_KEY
 
   attr_reader :base_serializer
 
@@ -109,10 +98,17 @@ class VcrBetterBinarySerializer
     File.open(path, "wb") { |file| file.write(data) }
   end
 
-  def yield_cassettes
-    Dir.glob(File.expand_path("*.#{file_extension}", cassette_dir)).each do |cassette_path|
+  def yield_cassette_http_bodies
+    cassette_paths.each do |cassette_path|
       data = base_serializer.deserialize(File.read(cassette_path))
-      yield(data)
+
+      yield_http_bodies(data) do |body|
+        yield(body)
+      end
     end
+  end
+
+  def cassette_paths
+    Dir.glob(File.expand_path("*.#{file_extension}", cassette_dir))
   end
 end
