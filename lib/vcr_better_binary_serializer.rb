@@ -30,6 +30,24 @@ class VcrBetterBinarySerializer
     data
   end
 
+  def prune_bin_data
+    in_use_keys = Set.new
+
+    yield_cassettes do |cassette|
+      yield_http_bodies(cassette) do |body|
+        if body.key?(BIN_KEY)
+          in_use_keys << body[BIN_KEY]
+        end
+      end
+    end
+
+    Dir.glob(File.expand_path("*", bin_data_dir)).each do |bin_file|
+      unless in_use_keys.include?(File.basename(bin_file))
+        File.delete(bin_file)
+      end
+    end
+  end
+
   private
 
   BIN_KEY = "bin_key"
@@ -89,5 +107,12 @@ class VcrBetterBinarySerializer
 
   def write_binary_data(path, data)
     File.open(path, "wb") { |file| file.write(data) }
+  end
+
+  def yield_cassettes
+    Dir.glob(File.expand_path("*.#{file_extension}", cassette_dir)).each do |cassette_path|
+      data = base_serializer.deserialize(File.read(cassette_path))
+      yield(data)
+    end
   end
 end
