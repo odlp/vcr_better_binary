@@ -1,9 +1,9 @@
-require "capybara_discoball"
+require "support/test_server"
+require "vcr_better_binary_serializer"
+
 require "fileutils"
 require "net/http"
-require "sinatra"
 require "tmpdir"
-require "vcr_better_binary_serializer"
 require "vcr"
 require "webmock"
 
@@ -12,6 +12,19 @@ RSpec.describe "use with VCR" do
   let(:image1) { File.expand_path("fixtures/image.png", __dir__) }
   let(:image2) { File.expand_path("fixtures/image.jpg", __dir__) }
   let(:serializer) { VcrBetterBinarySerializer.new }
+
+  before(:all) do
+    @server = TestServer.new(port: 9001)
+      .handle("/") do |_, response|
+        response.status = 200
+        response["Content-Type"] = "image/jpeg"
+        response.body = read_binary_data(image2)
+      end.start
+  end
+
+  after(:all) do
+    @server.stop
+  end
 
   before(:each) do
     VCR.configure do |config|
@@ -28,21 +41,9 @@ RSpec.describe "use with VCR" do
     FileUtils.rm_rf(tmp_dir)
   end
 
-  class WebApplication < Sinatra::Base
-    post '/' do
-      send_file(@@file_path)
-    end
-  end
-
-  let(:server) do
-    Capybara::Discoball.spin(WebApplication)
-  end
-
-  let(:url) { URI(server) }
+  let(:url) { URI("http://localhost:9001") }
 
   it "persists the cassette without binary data in the request or response" do
-    WebApplication.class_variable_set(:@@file_path, image2)
-
     VCR.use_cassette("integration-test") do
       Net::HTTP.post(url, read_binary_data(image1), "Content-Type" => "image/png")
     end
@@ -62,8 +63,6 @@ RSpec.describe "use with VCR" do
   end
 
   it "can be deserialzed successfully" do
-    WebApplication.class_variable_set(:@@file_path, image2)
-
     make_request = Proc.new do
       VCR.use_cassette("integration-test-2") do
         Net::HTTP.post(url, read_binary_data(image1), "Content-Type" => "image/png")
@@ -83,9 +82,7 @@ RSpec.describe "use with VCR" do
   private
 
   def read_binary_data(path)
-    data = File.open(path, "rb") do |file|
-      file.read
-    end
+    data = File.open(path, "rb") { |file| file.read }
 
     expect(data.encoding).to eq Encoding::BINARY
 
