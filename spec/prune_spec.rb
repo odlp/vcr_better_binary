@@ -100,6 +100,8 @@ RSpec.describe "pruning unused binary data" do
 
   def git_init_and_commit
     expect(session.run("git init")).to be_a_success
+    expect(session.run("git config user.name 'A Tester'")).to be_a_success
+    expect(session.run("git config user.email 'test@example.com'")).to be_a_success
     expect(session.run("git add .")).to be_a_success
     expect(session.run("git commit -m 'Initial commit'")).to be_a_success
   end

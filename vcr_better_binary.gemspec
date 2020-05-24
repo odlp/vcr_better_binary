@@ -8,7 +8,7 @@ Gem::Specification.new do |spec|
   spec.summary       = "Persist binary data outside your VCR cassettes"
   spec.homepage      = "https://github.com/odlp/vcr_better_binary"
   spec.license       = "MIT"
-  spec.required_ruby_version = Gem::Requirement.new(">= 2.4.0")
+  spec.required_ruby_version = Gem::Requirement.new(">= 2.5.0")
 
   spec.metadata["homepage_uri"] = spec.homepage
   # spec.metadata["source_code_uri"] = "TODO: Put your gem's public repo URL here."
@@ -28,4 +28,5 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "webmock"
   spec.add_development_dependency "simplecov"
   spec.add_development_dependency "jet_black"
+  spec.add_development_dependency "rspec_junit_formatter"
 end
