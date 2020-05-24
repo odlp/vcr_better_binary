@@ -15,6 +15,7 @@ GEM
     diff-lcs (1.3)
     docile (1.3.1)
     hashdiff (1.0.1)
+    jet_black (0.6.0)
     json (2.3.0)
     method_source (1.0.0)
     pry (0.13.1)
@@ -51,6 +52,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  jet_black
   pry
   rake
   rspec
