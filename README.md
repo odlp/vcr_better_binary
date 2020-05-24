@@ -1,5 +1,7 @@
 # VCR: Better Binary Serializer
 
+[![CircleCI](https://circleci.com/gh/odlp/vcr_better_binary.svg?style=shield)](https://circleci.com/gh/odlp/vcr_better_binary)
+
 ## What
 
 This gem is a [VCR] serializer which persists any binary data in the HTTP
