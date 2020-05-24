@@ -1,4 +1,6 @@
-class VcrBetterBinarySerializer
+require "vcr"
+
+module VcrBetterBinary
   class Pruner
     def prune_bin_data(bin_data_dir:, cassette_http_bodies:)
       if in_git_repo? && no_cassette_changes?
@@ -18,8 +20,8 @@ class VcrBetterBinarySerializer
 
     def find_in_use_keys(cassette_http_bodies)
       cassette_http_bodies.each_with_object(Set.new) do |http_body, in_use_keys|
-        if http_body.key?(BIN_KEY)
-          in_use_keys << http_body[BIN_KEY]
+        if http_body.key?(Serializer::BIN_KEY)
+          in_use_keys << http_body[Serializer::BIN_KEY]
         end
       end
     end

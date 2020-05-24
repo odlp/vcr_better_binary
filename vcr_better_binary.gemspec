@@ -1,12 +1,12 @@
-require_relative "lib/vcr_better_binary_serializer/version"
+require_relative "lib/vcr_better_binary/version"
 
 Gem::Specification.new do |spec|
-  spec.name          = "vcr_better_binary_serializer"
-  spec.version       = VcrBetterBinarySerializer::VERSION
+  spec.name          = "vcr_better_binary"
+  spec.version       = VcrBetterBinary::VERSION
   spec.authors       = ["Oliver Peate"]
 
   spec.summary       = "Persist binary data outside your VCR cassettes"
-  spec.homepage      = "https://github.com/odlp/vcr_better_binary_serializer"
+  spec.homepage      = "https://github.com/odlp/vcr_better_binary"
   spec.license       = "MIT"
   spec.required_ruby_version = Gem::Requirement.new(">= 2.4.0")
 

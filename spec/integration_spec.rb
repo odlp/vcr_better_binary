@@ -1,5 +1,5 @@
 require "support/test_server"
-require "vcr_better_binary_serializer"
+require "vcr_better_binary"
 
 require "fileutils"
 require "net/http"
@@ -11,7 +11,7 @@ RSpec.describe "use with VCR" do
   let(:tmp_dir) { Dir.mktmpdir("tmp_vcr_cassettes") }
   let(:image1) { File.expand_path("fixtures/image.png", __dir__) }
   let(:image2) { File.expand_path("fixtures/image.jpg", __dir__) }
-  let(:serializer) { VcrBetterBinarySerializer.new }
+  let(:serializer) { VcrBetterBinary::Serializer.new }
 
   before(:all) do
     @server = TestServer.new(port: 9001)

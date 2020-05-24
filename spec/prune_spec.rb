@@ -1,4 +1,4 @@
-require "vcr_better_binary_serializer"
+require "vcr_better_binary"
 
 require "fileutils"
 require "jet_black"
@@ -49,7 +49,7 @@ RSpec.describe "pruning unused binary data" do
     session.create_file("bin_data/stale-reference-1", "")
     session.create_file("bin_data/stale-reference-2", "")
 
-    VcrBetterBinarySerializer.new.prune_bin_data
+    VcrBetterBinary::Serializer.new.prune_bin_data
 
     remaining_data = Dir.glob("bin_data/*", base: session.directory)
 
@@ -69,7 +69,7 @@ RSpec.describe "pruning unused binary data" do
 
         cassette_http_bodies = spy("cassette_http_bodies", each_with_object: [])
 
-        VcrBetterBinarySerializer::Pruner.new.prune_bin_data(
+        VcrBetterBinary::Pruner.new.prune_bin_data(
           bin_data_dir: File.join(session.directory, "/bin_data"),
           cassette_http_bodies: cassette_http_bodies,
         )
@@ -86,7 +86,7 @@ RSpec.describe "pruning unused binary data" do
 
         cassette_http_bodies = spy("cassette_http_bodies", each_with_object: [])
 
-        VcrBetterBinarySerializer::Pruner.new.prune_bin_data(
+        VcrBetterBinary::Pruner.new.prune_bin_data(
           bin_data_dir: File.join(session.directory, "/bin_data"),
           cassette_http_bodies: cassette_http_bodies,
         )

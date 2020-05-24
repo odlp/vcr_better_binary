@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    vcr_better_binary_serializer (0.1.0)
+    vcr_better_binary (0.1.0)
       vcr (~> 5.0)
 
 GEM
@@ -57,7 +57,7 @@ DEPENDENCIES
   rake
   rspec
   simplecov
-  vcr_better_binary_serializer!
+  vcr_better_binary!
   webmock
 
 BUNDLED WITH

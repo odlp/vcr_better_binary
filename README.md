@@ -1,1 +1,1 @@
-# VcrBetterBinarySerializer
+# VCR: Better Binary Serializer
