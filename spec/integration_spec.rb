@@ -83,6 +83,25 @@ RSpec.describe "use with VCR" do
     expect(responses).to all eq responses.first
   end
 
+  describe "changing the base serializer" do
+    let(:serializer) do
+      VcrBetterBinary::Serializer.new(base_serializer: VCR::Cassette::Serializers::JSON)
+    end
+
+    it "can be used with different serializers" do
+      VCR.use_cassette("integration-test-3") do
+        Net::HTTP.post(url, read_binary_data(image1), "Content-Type" => "image/png")
+      end
+
+      raw_cassette = File.read(File.expand_path("integration-test-3.json", tmp_dir))
+      recorded = JSON.parse(raw_cassette)
+      interaction = recorded["http_interactions"].last
+
+      expect(interaction.dig("request", "body")).to have_key("bin_key")
+      expect(interaction.dig("response", "body")).to have_key("bin_key")
+    end
+  end
+
   private
 
   def read_binary_data(path)
@@ -95,8 +114,8 @@ RSpec.describe "use with VCR" do
 
   def expect_body_referencing_binary_data(body:, expected_data:)
     expect(body["encoding"]).to eq "ASCII-8BIT"
-    expect(body.has_key?("string")).to eq(false)
-    expect(body.has_key?("bin_key")).to eq(true)
+    expect(body).to_not have_key("string")
+    expect(body).to have_key("bin_key")
 
     binary_data_path = File.join(tmp_dir, "/bin_data", body.dig("bin_key"))
 

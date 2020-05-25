@@ -29,4 +29,5 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "simplecov"
   spec.add_development_dependency "jet_black"
   spec.add_development_dependency "rspec_junit_formatter"
+  spec.add_development_dependency "multi_json"
 end

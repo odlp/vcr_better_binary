@@ -88,3 +88,13 @@ spec/fixtures/vcr_cassettes
 
 All remaining VCR functionality will operate as normal; the only adjustment is
 the storage of binary data.
+
+## Advanced configuration
+
+You can adjust the underlying serializer to save your cassettes in different
+formats, e.g:
+
+```ruby
+# JSON cassettes
+VcrBetterBinary::Serializer.new(base_serializer: VCR::Cassette::Serializers::JSON)
+```
