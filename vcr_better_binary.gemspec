@@ -5,13 +5,13 @@ Gem::Specification.new do |spec|
   spec.version       = VcrBetterBinary::VERSION
   spec.authors       = ["Oliver Peate"]
 
-  spec.summary       = "Persist binary data outside your VCR cassettes"
+  spec.summary       = "VCR serializer for persisting binary data outside cassettes"
   spec.homepage      = "https://github.com/odlp/vcr_better_binary"
   spec.license       = "MIT"
   spec.required_ruby_version = Gem::Requirement.new(">= 2.5.0")
 
   spec.metadata["homepage_uri"] = spec.homepage
-  # spec.metadata["source_code_uri"] = "TODO: Put your gem's public repo URL here."
+  spec.metadata["source_code_uri"] = spec.homepage
   # spec.metadata["changelog_uri"] = "TODO: Put your gem's CHANGELOG.md URL here."
 
   spec.files = Dir.chdir(__dir__) do
