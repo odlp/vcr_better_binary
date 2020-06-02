@@ -13,3 +13,5 @@
 spec/examples.txt
 
 coverage
+
+gemfiles/*.lock
