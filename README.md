@@ -16,6 +16,8 @@ request or response bodies outside the cassette.
   data stored elsewhere)
 - Github won't collapse the diffs for cassettes in PRs (the default for large files)
 
+You can read more about this gem in the following [blog post](https://oliverpeate.com/learning-by-making-small-things/).
+
 ## How
 
 Add the gem to your `Gemfile` and `bundle install`:
