@@ -26,6 +26,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "rake"
   spec.add_development_dependency "rspec"
   spec.add_development_dependency "webmock"
+  spec.add_development_dependency "webrick" # Not included in Ruby 3
   spec.add_development_dependency "simplecov"
   spec.add_development_dependency "jet_black"
   spec.add_development_dependency "rspec_junit_formatter"
